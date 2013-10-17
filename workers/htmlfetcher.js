@@ -1,5 +1,5 @@
-// eventually, you'll have some code here that uses the tested helpers
-// to actually download the urls you want to download.
+#!/opt/boxen/nodenv/shims/node
+// autorun node. find loc via 'which node'
 
 var path = require('path');
 
@@ -11,13 +11,22 @@ var fetcher = function(siteList){
   siteList = siteList || path.join(__dirname, "/../data/sites.txt");
 
   helpers.readUrls(siteList,function(site){
-    // console.log(site.split('\n'));
     urlArray = site.split('\n');
   });
-  // console.log(urlArray);
-
 
   for(var i = 0; i<urlArray.length-1; i++){
     helpers.downloadUrls(urlArray[i], downloaddir);
   }
 }();
+
+/*
+open crontab editor: crontab -e
+see current crontabs: crontab -l
+end current crontab: crontab -r
+
+open crontab editor in vi: VISUAL=vi crontab -e
+  hit i to go into edit mode
+  enter the cron info * * * * * [optional: path to executing program] fullpath
+  hit esc
+  type :wq (return)
+*/
