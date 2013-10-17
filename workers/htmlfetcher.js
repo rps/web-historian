@@ -1,4 +1,4 @@
-#!/opt/boxen/nodenv/shims/node
+// #!/opt/boxen/nodenv/shims/node
 // autorun node. find loc via 'which node'
 
 var path = require('path');
@@ -8,6 +8,7 @@ var helpers = require('./lib/html-fetcher-helpers.js');
 var fetcher = function(siteList){
   var urlArray = [];
   var downloaddir = path.join(__dirname, "/../data/sites/"); // tests will need to override this.
+
   siteList = siteList || path.join(__dirname, "/../data/sites.txt");
 
   helpers.readUrls(siteList,function(site){
@@ -17,7 +18,8 @@ var fetcher = function(siteList){
   for(var i = 0; i<urlArray.length-1; i++){
     helpers.downloadUrls(urlArray[i], downloaddir);
   }
-}();
+
+};
 
 /*
 open crontab editor: crontab -e
