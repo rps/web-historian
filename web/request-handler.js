@@ -8,39 +8,34 @@ var defaultHeaders = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
   "access-control-allow-headers": "content-type, accept",
-  "Content-Type":"text/html",
   "access-control-max-age": 10 // Seconds.
 };
 
-var respond = function(statusCode,response,data,HTMLDataType){
-  statusCode = statusCode || 200;
-  if(!HTMLDataType){
-    response.writeHead(statusCode, defaultHeaders);
-    response.end(data);
-  } else {
-    response.writeHead(statusCode, {"Content-Type": "text/"+HTMLDataType});
-    response.end(data);
-  }
+var respond = function(statusCode,response,data,datatype){
+  datatype = datatype || 'text/html';
+  defaultHeaders['Content-Type'] = datatype;
+  response.writeHead(statusCode, defaultHeaders);
+  response.end(data);
 };
 
 module.exports.handleRequest = function (request, response) {
   var pathname = url.parse(request.url).pathname;
 
   var routes = {
+
     'GET': function(url){
       var isPublicFile = url === 'styles.css' || !url.length;
       url = url || 'index.html';
       var fileLoc = isPublicFile ? path.join(__dirname, "/public/",url) : path.join(__dirname, "../data/sites/", url);
       fs.exists(fileLoc, function(exists){
         if(exists){
-          fs.readFile(fileLoc, 'utf8', function(err,html){
+          fs.readFile(fileLoc, 'utf8', function(err,fileData){
             if(err){
+              console.log(err);
+            } else if (url === 'styles.css'){
+              respond(200,response,fileData,'text/css');
             } else {
-              if(url === 'styles.css'){
-                respond(200,response,html,'css');
-              } else {
-                respond(200,response,html);
-              }
+              respond(200,response,fileData);
             }
           });
         } else {
@@ -48,6 +43,7 @@ module.exports.handleRequest = function (request, response) {
         }
       });
     },
+
     'POST': function(url){
       var fullBody = '';
       request.on('data',function(data){
@@ -74,5 +70,4 @@ module.exports.handleRequest = function (request, response) {
   } else {
     respond(405,response,'""');
   }
-
 };
