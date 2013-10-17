@@ -24,9 +24,7 @@ var respond = function(statusCode,response,data,HTMLDataType){
 };
 
 module.exports.handleRequest = function (request, response) {
-  console.log('here');
   var pathname = url.parse(request.url).pathname;
-  console.log(pathname);
 
   var routes = {
     'GET': function(url){
@@ -46,7 +44,7 @@ module.exports.handleRequest = function (request, response) {
             }
           });
         } else {
-          respond(404,response,'FILE NOT FOUND!');
+          respond(404,response,'File Not Found');
         }
       });
     },
@@ -56,9 +54,8 @@ module.exports.handleRequest = function (request, response) {
         fullBody += data;
       });
       request.on('end',function(){
-        console.log('fullBody: ', fullBody);
         if (!fullBody.length){
-          respond(400, response, '""');
+          respond(400, response, 'No File To Append');
         } else {
           var toSave = fullBody.slice(4);
           fs.appendFileSync(module.exports.datadir, toSave + "\n");
