@@ -1,4 +1,4 @@
-// #!/opt/boxen/nodenv/shims/node
+#!/opt/boxen/nodenv/shims/node
 // autorun node. find loc via 'which node'
 
 var path = require('path');
@@ -19,7 +19,7 @@ var fetcher = function(siteList){
     helpers.downloadUrls(urlArray[i], downloaddir);
   }
 
-};
+}();
 
 /*
 open crontab editor: crontab -e
